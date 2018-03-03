@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
     this.projectForm = new FormGroup({
       'projectData': new FormGroup({
         'projectName': new FormControl(null, [Validators.required],
-          this.asyncForbiddenProjectNameValidator),
+          this.asyncForbiddenProjectNamesValidator),
         'projectStatus': new FormControl(null, [Validators.required])
       }),
       'email': new FormControl(null, [Validators.required, Validators.email])
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
   //  return null;
   //}
 
-  asyncForbiddenProjectNameValidator(control: FormControl): Promise<any> | Observable<any> {
+  asyncForbiddenProjectNamesValidator(control: FormControl): Promise<any> | Observable<any> {
     const promise = new Promise<any>((resolve, reject) => {
       setTimeout(() => {
         if (control.value === 'Test') {
