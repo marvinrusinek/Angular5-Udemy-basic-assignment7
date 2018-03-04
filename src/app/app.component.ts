@@ -10,16 +10,17 @@ import { Observable } from "rxjs/Observable";
 export class AppComponent implements OnInit {
   projectForm: FormGroup;
   projectStatuses = ['Stable', 'Critical', 'Finished'];
-  defaultProjectStatus = 'Stable';
+  defaultProjectStatus = 'Critical';
   submittedForm = false;
-  forbiddenProjectNames = ['Test'];
 
   ngOnInit() {
     this.projectForm = new FormGroup({
       'projectData': new FormGroup({
-        'projectName': new FormControl(null, [Validators.required],
+        'projectName': new FormControl(
+          null,
+          [Validators.required, this.forbiddenProjectNamesValidator.bind(this)],
           this.asyncForbiddenProjectNamesValidator),
-        'projectStatus': new FormControl(null, [Validators.required])
+        'projectStatus': new FormControl('critical')
       }),
       'email': new FormControl(null, [Validators.required, Validators.email])
     });
@@ -30,17 +31,17 @@ export class AppComponent implements OnInit {
     this.submittedForm = true;
   }
 
-  // forbiddenProjectNamesValidator(control: FormControl): {[s: string]: boolean} {
-  //  if (this.forbiddenProjectNames.indexOf(control.value) !== -1) {
-  //    return {'projectNameIsForbidden': true};
-  //  }
-  //  return null;
-  //}
+  forbiddenProjectNamesValidator(control: FormControl): {[s: string]: boolean} {
+    if (control.value === 'Test') {
+      return {'projectNameIsForbidden': true};
+    }
+    return null;
+  }
 
   asyncForbiddenProjectNamesValidator(control: FormControl): Promise<any> | Observable<any> {
     const promise = new Promise<any>((resolve, reject) => {
       setTimeout(() => {
-        if (control.value === 'Test') {
+        if (control.value === 'Testproject') {
           resolve({'projectNameIsForbidden': true});
         } else {
           resolve(null);
